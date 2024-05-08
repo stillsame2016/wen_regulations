@@ -6,7 +6,7 @@ import traceback
 import google.generativeai as genai
 import requests
 import streamlit as st
-from dotenv import load_dotenv
+
 
 GOOGLE_API_KEY = st.secrets["GOOGLE_API_KEY"]
 genai.configure(api_key=GOOGLE_API_KEY)
