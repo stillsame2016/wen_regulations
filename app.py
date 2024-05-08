@@ -7,7 +7,6 @@ import google.generativeai as genai
 import requests
 import streamlit as st
 
-
 GOOGLE_API_KEY = st.secrets["GOOGLE_API_KEY"]
 genai.configure(api_key=GOOGLE_API_KEY)
 model = genai.GenerativeModel('gemini-pro')
