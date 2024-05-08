@@ -110,7 +110,7 @@ if "chat" not in st.session_state:
     st.session_state.chat = model.start_chat(history=[])
 
 # Display Form Title
-st.title("Chat with NDP Catalog")
+st.title("Chat with National Pollution Discharge Elimination System ")
 
 # Display chat messages from history above current input box
 for message in st.session_state.chat.history:
