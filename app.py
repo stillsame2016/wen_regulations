@@ -86,7 +86,7 @@ for message in st.session_state.chat.history:
     with st.chat_message(role_to_streamlit(message.role)):
         if message.role == 'user':
             prompt = message.parts[0].text
-            st.markdown(extract_text_between_question_and_answer(prompt))
+            st.markdown(extract_text_between_question_and_answer(prompt)[0])
         else:
             answer = message.parts[0].text
             st.markdown(answer)
