@@ -5,7 +5,7 @@ import requests
 import streamlit as st
 from groq import Groq
 
-Groq_KEY = st.secrets["Groq_KEY']
+Groq_KEY = st.secrets["Groq_KEY"]
 
 def role_to_streamlit(role):
     if role == "model":
