@@ -94,12 +94,31 @@ if prompt := st.chat_input("What can I help with?"):
     datasets = json.loads(response.text)
     # st.code(json.dumps(datasets, indent=4))
 
-    docs = [ Document(page_content=dataset["description"]) for dataset in datasets ]
-    chain = get_conversation_chain()
-    response = chain(
-        {"input_documents": docs, "question": prompt},
-        return_only_outputs=True
-    )
-    st.write(response["output_text"], unsafe_allow_html=True)
+    # docs = [ Document(page_content=dataset["description"]) for dataset in datasets ]
+    # chain = get_conversation_chain()
+
+    context = "\n\n".join([ dataset["description"] for dataset in datasets ])
+
+    request = f"""
+        Based on the provided context, Answer the question clear and precise. 
+        
+        If no information is provided in the context,  return the result as "Sorry I dont know 
+        the answer", don't provide the wrong answer.
+        
+        Context:\n {context}?\n
+        
+        Question:\n{prompt}\n
+        Answer:
+    """
+    
+    response = st.session_state.chat.send_message(request, stream=False, safety_settings=safe)
+    with st.chat_message("assistant"):
+        st.markdown(response.text)
+
+    # response = chain(
+    #     {"input_documents": docs, "question": prompt},
+    #     return_only_outputs=True
+    # )
+    # st.write(response["output_text"], unsafe_allow_html=True)
     
     
