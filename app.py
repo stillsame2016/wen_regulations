@@ -5,6 +5,7 @@ import requests
 import streamlit as st
 from groq import Groq
 
+Groq_KEY = st.secrets["Groq_KEY']
 
 def role_to_streamlit(role):
     if role == "model":
@@ -89,7 +90,7 @@ if prompt := st.chat_input("What can I help with?"):
     with st.chat_message("assistant"):
 
         with st.spinner("We are in the process of retrieving the relevant provisions to give you the best possible answer."):
-            client = Groq(api_key="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")
+            client = Groq(api_key=Groq_KEY)
             chat_completion = client.chat.completions.create(
                 messages=[{"role": "user", "content": request}],
                 model="llama3-70b-8192")
