@@ -90,7 +90,7 @@ if prompt := st.chat_input("What can I help with?"):
 
     response = requests.get(f"https://sparcal.sdsc.edu/api/v1/Utility/regulations?search_terms={prompt}")
     datasets = json.loads(response.text)
-    st.code(json.dumps(datasets, indent=4))
+    # st.code(json.dumps(datasets, indent=4))
 
     docs = [ Document(page_content=dataset["description"]) for dataset in datasets ]
     chain = get_conversation_chain()
