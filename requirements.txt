@@ -3,4 +3,3 @@ google-generativeai
 python-dotenv
 langchain
 langchain_google_genai
-htmlTemplates==2.2.1
