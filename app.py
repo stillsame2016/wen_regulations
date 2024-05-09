@@ -120,7 +120,7 @@ if prompt := st.chat_input("What can I help with?"):
         Answer:
     """
 
-    st.markdown(request)
+    # st.markdown(request)
     
     response = st.session_state.chat.send_message(request, stream=False, safety_settings=safe)
     with st.chat_message("assistant"):
