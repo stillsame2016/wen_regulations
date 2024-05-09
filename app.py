@@ -87,7 +87,7 @@ if prompt := st.chat_input("What can I help with?"):
     datasets = json.loads(response.text)
     st.code(json.dumps(datasets, indent=4))
 
-    docs = [ dataset["description"] for dataset in datasets ]
+    docs = [ Document(page_content=dataset["description"]) for dataset in datasets ]
     chain = get_conversation_chain()
     response = chain(
         {"input_documents": docs, "question": prompt},
