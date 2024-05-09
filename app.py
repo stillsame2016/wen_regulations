@@ -86,7 +86,7 @@ if prompt := st.chat_input("What can I help with?"):
 
     # st.markdown(request)
 
-    client = Groq(api_key="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")
+    client = Groq(api_key="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")
     chat_completion = client.chat.completions.create(
         messages=[{"role": "user", "content": request}],
         model="llama3-70b-8192")
