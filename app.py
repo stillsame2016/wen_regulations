@@ -4,6 +4,10 @@ import time
 import traceback
 
 import google.generativeai as genai
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain.chains.question_answering import load_qa_chain
+from langchain.prompts import PromptTemplate
+
 import requests
 import streamlit as st
 
@@ -39,70 +43,18 @@ def role_to_streamlit(role):
         return role
 
 
-def justification_markdown(justification_data):
-    found_dataset = False
-    for dataset in justification_data:
-        if dataset['is_relevant']:
-            if not found_dataset:
-                st.markdown("""
-                            Below are the NDP datasets that are semantically closest to your request. 
-                            Our searches and justifications are performed using AI. 
-                            If you need more relevant datasets, please use other search tools on NDP.
-                            """)
-                found_dataset = True
-
-            with st.container():
-                st.markdown(f"""
-                   <hr style="margin: 5px 0px 15px 0px; padding: 0px;" />
-                   <table style="border: none; margin-bottom: 5pt;">
-                      <tr style="border: none;">
-                          <td style="vertical-align: top; border: none; font-weight: bold; margin: 0px; padding: 0px 8px;">
-                               Dataset ID:
-                          </td>
-                          <td style="vertical-align: top; border: none;  margin: 0px 5px; padding: 0px;">
-                               {dataset['dataset_id']}
-                          </td>
-                      </tr>
-                      <tr style="border: none;">
-                          <td style="vertical-align: top; border: none; font-weight: bold; margin: 0px; padding: 0px 8px;">
-                               Title:
-                          </td>
-                          <td style="vertical-align: top; border: none;  margin: 0px; margin: 0px 5px; padding: 0px;">
-                               {dataset['title']}
-                           </td>
-                      </tr>
-                      <tr style="border: none;">
-                          <td style="vertical-align: top; border: none; font-weight: bold; margin: 0px; padding: 0px 8px;">
-                               Summary:
-                           </td>
-                          <td style="vertical-align: top; border: none; margin: 0px 5px; padding: 0px;">
-                               {dataset['summary']}
-                          </td>
-                      </tr>
-                      <tr style="border: none;">
-                          <td style="vertical-align: top; border: none; font-weight: bold; margin: 0px; padding: 0px 8px;">
-                               Justification:
-                           </td>
-                          <td style="vertical-align: top; border: none; margin: 0px 5px; padding: 0px;">
-                               {dataset['reason']}
-                          </td>
-                      </tr>
-                   </table>
-                """, unsafe_allow_html=True)
-
-            # st.markdown(f"""
-            #             **Dataset ID:** {dataset['dataset_id']}
-            #             **Title:** {dataset['title']}
-            #             **Summary:** {dataset['summary']}
-            #             **Justification:** {dataset['reason']}
-            #             """)
-
-    if not found_dataset:
-        st.markdown(f"""
-                    We couldn't locate a dataset closely aligned with your request. 
-                    You can try refining your search for further attempts.
-                    """)
-    return ""
+def get_conversation_chain():
+    prompt_template = """
+        Answer the question clear and precise. If not provided the context return the result as
+        "Sorry I dont know the answer", don't provide the wrong answer.
+        Context:\n {context}?\n
+        Question:\n{question}\n
+        Answer:
+    """
+    model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.3)
+    prompt = PromptTemplate(template=prompt_template, input_variables=['context', 'question'])
+    chain = load_qa_chain(model, chain_type='stuff', prompt=prompt)
+    return chain
 
 
 # Add a Chat history object to Streamlit session state
@@ -110,68 +62,23 @@ if "chat" not in st.session_state:
     st.session_state.chat = model.start_chat(history=[])
 
 # Display Form Title
-st.title("Chat with National Pollution Discharge Elimination System ")
+st.title("Chat with NPDES")
 
 # Display chat messages from history above current input box
 for message in st.session_state.chat.history:
 
-    if message.role == 'user':
-        # skip the justification request
-        prompt = message.parts[0].text.strip()
-        if prompt.startswith("The user is looking for datasets with the following keywords"):
-            continue
-
-    elif message.role != 'user':
-        # skip search terms extraction answer
-        answer = message.parts[0].text
-        if answer.startswith('```json'):
-            json_part = answer.split("\n", 1)[1].rsplit("\n", 1)[0]
-            data = json.loads(json_part)
-        else:
-            data = json.loads(answer)
-        if isinstance(data, dict) and "is_search_data" in data.keys() and data["is_search_data"]:
-            continue
-
     with st.chat_message(role_to_streamlit(message.role)):
-
         if message.role == 'user':
             prompt = message.parts[0].text
-            start_index = prompt.find("[--- Start ---]") + len("[--- Start ---]")
-            end_index = prompt.find("[--- End ---]")
-            prompt = prompt[start_index:end_index].strip()
             st.markdown(prompt)
         else:
             answer = message.parts[0].text
-            # print('-' * 70, 'raw answer in history')
-            # print(answer)
-
-            if answer.startswith('```json'):
-                json_part = answer.split("\n", 1)[1].rsplit("\n", 1)[0]
-                data = json.loads(json_part)
-            else:
-                data = json.loads(answer)
-
-            # print('-' * 70, 'json answer in history')
-            # print(data)
-
-            if isinstance(data, dict):
-                if not data["is_search_data"]:
-                    assistant_response = data["alternative_answer"]
-                else:
-                    answer = "Searching NDP catalog by the terms:"
-                    for term in data['search_terms']:
-                        answer = f"{answer}\n - {term}"
-                    assistant_response = answer
-            else:
-                # assistant_response = json.dumps(data, indent=4)
-                assistant_response = justification_markdown(data)
-
-            st.markdown(assistant_response)
+            st.markdown(answer)
 
         # st.markdown(message.parts[0].text)
 
 # Accept user's next message, add to context, resubmit context to Gemini
-if prompt := st.chat_input("I'm the NDP Catalog Assistant. Need data or have questions? Just ask!"):
+if prompt := st.chat_input("What can I help with?"):
 
     # Display user's last message
     st.chat_message("user").markdown(prompt)
