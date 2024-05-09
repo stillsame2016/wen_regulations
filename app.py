@@ -1,6 +1,7 @@
 import json
 import os
 import time
+import re
 import traceback
 
 import google.generativeai as genai
@@ -62,6 +63,14 @@ def get_conversation_chain():
     return chain
 
 
+def extract_text_between_question_and_answer(text):
+    # Define the pattern to match "Question:" followed by any text until "Answer"
+    pattern = r'Question:(.*?)Answer'
+    # Use re.DOTALL to make '.' match any character including newlines
+    matches = re.findall(pattern, text, re.DOTALL)
+    return matches
+    
+
 # Add a Chat history object to Streamlit session state
 if "chat" not in st.session_state:
     st.session_state.chat = model.start_chat(history=[])
@@ -77,7 +86,7 @@ for message in st.session_state.chat.history:
     with st.chat_message(role_to_streamlit(message.role)):
         if message.role == 'user':
             prompt = message.parts[0].text
-            st.markdown(prompt)
+            st.markdown(extract_text_between_question_and_answer(prompt))
         else:
             answer = message.parts[0].text
             st.markdown(answer)
