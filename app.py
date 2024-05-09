@@ -85,7 +85,7 @@ if prompt := st.chat_input("What can I help with?"):
 
     response = requests.get(f"https://sparcal.sdsc.edu/api/v1/Utility/regulations?search_terms={prompt}")
     datasets = json.loads(response.text)
-    st.code(datasets)
+    st.code(json.dumps(datasets, indent=4))
     
     query = f"""
       You are an expert of the national data platform catalog for various datasets. 
