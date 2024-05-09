@@ -83,6 +83,10 @@ if prompt := st.chat_input("What can I help with?"):
     # Display user's last message
     st.chat_message("user").markdown(prompt)
 
+    response = requests.get(f"https://sparcal.sdsc.edu/api/v1/Utility/regulations?search_terms={prompt}")
+    datasets = json.loads(response.text)
+    st.code(datasets)
+    
     query = f"""
       You are an expert of the national data platform catalog for various datasets. 
       You also have general knowledge.
