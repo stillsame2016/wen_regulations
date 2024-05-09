@@ -98,10 +98,12 @@ if prompt := st.chat_input("What can I help with?"):
     chat_completion = client.chat.completions.create(
         messages=[{ "role": "user",  "content": request }],
         model="llama3-70b-8192")
-    
+    result = chat_completion.choices[0].message.content
+    result = extract_code_blocks(result)[0] 
+
     with st.chat_message("assistant"):
-        st.markdown(response.text)
-        st.session_state.chat.append({"role": "assistant", "content": response.text})
+        st.markdown(result)
+        st.session_state.chat.append({"role": "assistant", "content": result})
 
     
     
