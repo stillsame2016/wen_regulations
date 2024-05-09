@@ -90,7 +90,7 @@ if prompt := st.chat_input("What can I help with?"):
     docs = [ dataset["description"] for dataset in datasets ]
     chain = get_conversation_chain()
     response = chain(
-        {"input_documents": docs, "question": user_question},
+        {"input_documents": docs, "question": prompt},
         return_only_outputs=True
     )
     st.write(user_template.replace("{{MSG}}", response["output_text"]), unsafe_allow_html=True)
