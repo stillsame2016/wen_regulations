@@ -106,7 +106,7 @@ if prompt := st.chat_input("What can I help with?"):
     # docs = [ Document(page_content=dataset["description"]) for dataset in datasets ]
     # chain = get_conversation_chain()
 
-    context = "\n\n".join([ dataset["description"] for dataset in datasets ])
+    context = "\n\n===================\n\n".join([ dataset["description"] for dataset in datasets ])
 
     request = f"""
         Based on the provided context, Answer the question clear and precise. 
