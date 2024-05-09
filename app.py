@@ -21,6 +21,7 @@ def extract_text_between_question_and_answer(text):
     matches = re.findall(pattern, text, re.DOTALL)
     return matches
 
+st.set_page_config(page_title="NPDES")
 
 # Add a Chat history object to Streamlit session state
 if "chat" not in st.session_state:
