@@ -86,12 +86,14 @@ if prompt := st.chat_input("What can I help with?"):
 
     # st.markdown(request)
 
-    client = Groq(api_key="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")
-    chat_completion = client.chat.completions.create(
-        messages=[{"role": "user", "content": request}],
-        model="llama3-70b-8192")
-    result = chat_completion.choices[0].message.content
-
     with st.chat_message("assistant"):
-        st.markdown(result)
-        st.session_state.chat.append({"role": "assistant", "content": result})
+
+        with st.spinner("thinking"):
+            client = Groq(api_key="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")
+            chat_completion = client.chat.completions.create(
+                messages=[{"role": "user", "content": request}],
+                model="llama3-70b-8192")
+            result = chat_completion.choices[0].message.content
+    
+            st.markdown(result)
+            st.session_state.chat.append({"role": "assistant", "content": result})
