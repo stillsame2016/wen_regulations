@@ -72,6 +72,8 @@ st.title("Chat with NPDES")
 # Display chat messages from history above current input box
 for message in st.session_state.chat.history:
 
+    st.markdown(message)
+    
     with st.chat_message(role_to_streamlit(message.role)):
         if message.role == 'user':
             prompt = message.parts[0].text
