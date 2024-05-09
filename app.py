@@ -4,38 +4,13 @@ import time
 import re
 import traceback
 
-import google.generativeai as genai
-from langchain_google_genai import ChatGoogleGenerativeAI
+from groq import Groq
 from langchain.chains.question_answering import load_qa_chain
 from langchain.prompts import PromptTemplate
 from langchain.docstore.document import Document
 
 import requests
 import streamlit as st
-
-GOOGLE_API_KEY = st.secrets["GOOGLE_API_KEY"]
-genai.configure(api_key=GOOGLE_API_KEY)
-model = genai.GenerativeModel('gemini-pro')
-
-safe = [
-    {
-        "category": "HARM_CATEGORY_HARASSMENT",
-        "threshold": "BLOCK_NONE",
-    },
-    {
-        "category": "HARM_CATEGORY_HATE_SPEECH",
-        "threshold": "BLOCK_NONE",
-    },
-    {
-        "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-        "threshold": "BLOCK_NONE",
-    },
-    {
-        "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
-        "threshold": "BLOCK_NONE",
-    },
-]
-
 
 # Gemini uses 'model' for assistant; Streamlit uses 'assistant'
 def role_to_streamlit(role):
@@ -73,13 +48,13 @@ def extract_text_between_question_and_answer(text):
 
 # Add a Chat history object to Streamlit session state
 if "chat" not in st.session_state:
-    st.session_state.chat = model.start_chat(history=[])
+    st.session_state.chat = []
 
 # Display Form Title
 st.title("Chat with NPDES")
 
 # Display chat messages from history above current input box
-for message in st.session_state.chat.history:
+for message in st.session_state.chat:
 
     # st.markdown(message)
     
@@ -96,15 +71,12 @@ for message in st.session_state.chat.history:
 # Accept user's next message, add to context, resubmit context to Gemini
 if prompt := st.chat_input("What can I help with?"):
 
-    # Display user's last message
+    # Display and save the user's input
     st.chat_message("user").markdown(prompt)
+    st.session_state.chat.append({"role": "user", "content": prompt})
 
     response = requests.get(f"https://sparcal.sdsc.edu/api/v1/Utility/regulations?search_terms={prompt}")
     datasets = json.loads(response.text)
-    # st.code(json.dumps(datasets, indent=4))
-
-    # docs = [ Document(page_content=dataset["description"]) for dataset in datasets ]
-    # chain = get_conversation_chain()
 
     context = "\n\n===================\n\n".join([ dataset["description"] for dataset in datasets ])
 
@@ -122,14 +94,14 @@ if prompt := st.chat_input("What can I help with?"):
 
     st.markdown(request)
     
-    response = st.session_state.chat.send_message(request, stream=False, safety_settings=safe)
+    client = Groq(api_key="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")
+    chat_completion = client.chat.completions.create(
+        messages=[{ "role": "user",  "content": request }],
+        model="llama3-70b-8192")
+    
     with st.chat_message("assistant"):
         st.markdown(response.text)
+        st.session_state.chat.append({"role": "assistant", "content": response.text})
 
-    # response = chain(
-    #     {"input_documents": docs, "question": prompt},
-    #     return_only_outputs=True
-    # )
-    # st.write(response["output_text"], unsafe_allow_html=True)
     
     
