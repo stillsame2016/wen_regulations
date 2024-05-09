@@ -46,9 +46,13 @@ def role_to_streamlit(role):
 
 def get_conversation_chain():
     prompt_template = """
-        Answer the question clear and precise. If not provided the context return the result as
-        "Sorry I dont know the answer", don't provide the wrong answer.
+        Based on the provided context, Answer the question clear and precise. 
+        
+        If no information is provided in the context,  return the result as "Sorry I dont know 
+        the answer", don't provide the wrong answer.
+        
         Context:\n {context}?\n
+        
         Question:\n{question}\n
         Answer:
     """
