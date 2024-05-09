@@ -48,7 +48,7 @@ if prompt := st.chat_input("What can I help with?"):
 
     response = requests.get(f"https://sparcal.sdsc.edu/api/v1/Utility/regulations?search_terms={prompt}")
     datasets = json.loads(response.text)
-    datasets = datasets[0:5]
+    datasets = datasets[0:6]
 
     context = "\n\n===================\n\n".join([dataset["description"] for dataset in datasets])
 
