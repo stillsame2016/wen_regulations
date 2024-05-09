@@ -88,7 +88,7 @@ if prompt := st.chat_input("What can I help with?"):
 
     with st.chat_message("assistant"):
 
-        with st.spinner("thinking"):
+        with st.spinner("We are in the process of retrieving the relevant provisions to give you the best possible answer."):
             client = Groq(api_key="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")
             chat_completion = client.chat.completions.create(
                 messages=[{"role": "user", "content": request}],
