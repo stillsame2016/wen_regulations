@@ -43,7 +43,7 @@ for message in st.session_state.chat:
         # st.markdown(message.parts[0].text)
 
 # Accept user's next message, add to context, resubmit context to Gemini
-if prompt := st.chat_input("What can I help with?"):
+if prompt := st.chat_input("What can I help you with?"):
     # Display and save the user's input
     st.chat_message("user").markdown(prompt)
     st.session_state.chat.append({"role": "user", "content": prompt})
