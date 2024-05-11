@@ -77,7 +77,7 @@ if prompt := st.chat_input("What can I help with?"):
         Based on the provided context, using easy understanding language,  answer the question clear and precise with 
         references and explainations. 
         
-        Never say "Based on the provided context" or something similar. 
+        Never mention "provided context" or something similar. 
 
         If no information is provided in the context,  return the result as "Sorry I dont know 
         the answer", don't provide the wrong answer.
