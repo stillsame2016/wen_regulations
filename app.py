@@ -29,18 +29,13 @@ if "chat" not in st.session_state:
     st.session_state.chat = []
 
 # Display Form Title
-# st.title("Chat with NPDES")
 st.markdown("### Chat with NPDES ")
 
 # Display chat messages from history above current input box
 for message in st.session_state.chat:
-
-    # st.markdown(message)
-
     with st.chat_message(message['role']):
         st.markdown(message['content'])
 
-        # st.markdown(message.parts[0].text)
 
 # Accept user's next message, add to context, resubmit context to Gemini
 if prompt := st.chat_input("What can I help you with?"):
