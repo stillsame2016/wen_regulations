@@ -1,6 +1,5 @@
 import json
 import re
-
 import requests
 import streamlit as st
 from groq import Groq
@@ -13,7 +12,6 @@ def role_to_streamlit(role):
         return "assistant"
     else:
         return role
-
 
 def extract_text_between_question_and_answer(text):
     # Define the pattern to match "Question:" followed by any text until "Answer"
