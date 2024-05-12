@@ -75,8 +75,8 @@ if prompt := st.chat_input("What can I help you with?"):
         It plays a critical role in preventing water pollution and maintaining the integrity of the nation's water 
         resources.
     
-        Based on the provided context, using easy understanding language,  answer the question clear and precise with 
-        references and explainations. Please don't mention "context" in your answer.
+        Based on the provided context, use easy understanding language to answer the question clear and precise with 
+        references and explainations. Please don't mention the term "context" in the answer.
 
         If no information is provided in the context,  return the result as "Sorry I dont know 
         the answer", don't provide the wrong answer.
