@@ -72,7 +72,7 @@ if user_input := st.chat_input("What can I help you with?"):
     st.chat_message("user").markdown(user_input)
     st.session_state.chat.append({"role": "user", "content": user_input})
 
-    response = requests.get(f"{VDB_URL}={user_input}")
+    response = requests.get(f"{VDB_URL}?search_terms={user_input}")
     datasets = json.loads(response.text)
     datasets = datasets[0:5]
     context = "\n".join([dataset["description"] for dataset in datasets])
