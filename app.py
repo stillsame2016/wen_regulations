@@ -7,6 +7,7 @@ from langchain_groq import ChatGroq
 
 Groq_KEY = st.secrets["Groq_KEY"]
 Groq_KEY_2 = st.secrets["Groq_KEY_2"]
+VDB_URL = st.secrets["VDB_URL"]
 
 llm = ChatGroq(temperature=0, model_name="llama3-70b-8192", api_key=Groq_KEY)
 llm2 = ChatGroq(temperature=0, model_name="llama3-70b-8192", api_key=Groq_KEY_2)
@@ -71,7 +72,7 @@ if user_input := st.chat_input("What can I help you with?"):
     st.chat_message("user").markdown(user_input)
     st.session_state.chat.append({"role": "user", "content": user_input})
 
-    response = requests.get(f"https://sparcal.sdsc.edu/api/v1/Utility/regulations?search_terms={user_input}")
+    response = requests.get(f"{VDB_URL}={user_input}")
     datasets = json.loads(response.text)
     datasets = datasets[0:5]
     context = "\n".join([dataset["description"] for dataset in datasets])
