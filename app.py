@@ -52,8 +52,9 @@ user_input = PromptTemplate(
         Based on the provided context, use easy understanding language to answer the question clear and precise with 
         references and explanations. Please don't mention the term "context" in the answer.
 
-        If no information is provided in the context, return the result as "Sorry I dont know 
-        the answer", don't provide the wrong answer or a contradictory answer.
+        If the user asks a question and no information is provided in the context, return the result as "Sorry I dont know 
+        the answer", don't provide the wrong answer or a contradictory answer. If the user makes a statement rather than
+        a question, then just answer it politely and reasonably.
 
         Context:{context}
 
