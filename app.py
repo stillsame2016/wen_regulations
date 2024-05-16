@@ -78,7 +78,7 @@ if user_input := st.chat_input("What can I help you with?"):
     with st.chat_message("assistant"):
         with st.spinner("We are in the process of retrieving the relevant provisions to give you the best possible answer."):
    
-            if "kentucky" in user_input.lower():
+            if "kentucky" in user_input.lower() or "KPDES" in user_input:
                 response = requests.get(f"{VDB_URL}?search_terms={user_input}")
                 datasets = json.loads(response.text)
                 datasets = datasets[0:4]
