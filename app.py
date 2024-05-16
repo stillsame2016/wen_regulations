@@ -8,6 +8,7 @@ from langchain_groq import ChatGroq
 Groq_KEY = st.secrets["Groq_KEY"]
 Groq_KEY_2 = st.secrets["Groq_KEY_2"]
 VDB_URL = st.secrets["VDB_URL"]
+KPDES_URL = st.secrets["KPDES_URL"]
 
 llm = ChatGroq(temperature=0, model_name="llama3-70b-8192", api_key=Groq_KEY)
 llm2 = ChatGroq(temperature=0, model_name="llama3-70b-8192", api_key=Groq_KEY_2)
