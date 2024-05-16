@@ -78,7 +78,7 @@ if user_input := st.chat_input("What can I help you with?"):
    
             response = requests.get(f"{VDB_URL}?search_terms={user_input}")
             datasets = json.loads(response.text)
-            datasets = datasets[0:5]
+            datasets = datasets[0:4]
             context = "\n".join([dataset["description"] for dataset in datasets])
                     
             try:
