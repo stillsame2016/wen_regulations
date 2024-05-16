@@ -52,8 +52,8 @@ user_input = PromptTemplate(
 
         Based on the provided context, use easy understanding language to answer the question clear and precise with 
         references and explanations. If the local regulations (for example, KPDES for Kentucky Pollutant Discharge 
-        Elimination System) can be applied, please include both NPDES rules and KPDES rules, and make clear indications 
-        of the sources of the rules.
+        Elimination System) can be applied, please include the details of both NPDES rules and KPDES rules, and make 
+        clear indications of the sources of the rules.
 
         If no information is provided in the context, return the result as "Sorry I dont know the answer", don't provide 
         the wrong answer or a contradictory answer.
