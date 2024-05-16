@@ -50,10 +50,11 @@ user_input = PromptTemplate(
         resources.
 
         Based on the provided context, use easy understanding language to answer the question clear and precise with 
-        references and explanations. Please don't mention the term "context" in the answer.
+        references and explanations. If the local regulations (for example, KPDES for Kentucky Pollutant Discharge Elimination System)
+        is used, please make a clear statement of the scope of those rules.
 
-        If no information is provided in the context, return the result as "Sorry I dont know 
-        the answer", don't provide the wrong answer or a contradictory answer.
+        If no information is provided in the context, return the result as "Sorry I dont know the answer", don't provide 
+        the wrong answer or a contradictory answer.
 
         Context:{context}
 
@@ -73,14 +74,25 @@ if user_input := st.chat_input("What can I help you with?"):
     st.session_state.chat.append({"role": "user", "content": user_input})
 
     with st.chat_message("assistant"):
-        with st.spinner(
-                "We are in the process of retrieving the relevant provisions to give you the best possible answer."):
+        with st.spinner("We are in the process of retrieving the relevant provisions to give you the best possible answer."):
    
-            response = requests.get(f"{VDB_URL}?search_terms={user_input}")
-            datasets = json.loads(response.text)
-            datasets = datasets[0:5]
-            context = "\n".join([dataset["description"] for dataset in datasets])
-                    
+            if "kentucky" in user_input.lower():
+                response = requests.get(f"{VDB_URL}?search_terms={user_input}")
+                datasets = json.loads(response.text)
+                datasets = datasets[0:4]
+                context = "NPDES regulations: "
+                context += "\n".join([dataset["description"] for dataset in datasets])
+                
+                response = requests.get(f"{KPDES_URL}?search_terms={user_input}")
+                datasets = json.loads(response.text)
+                datasets = datasets[0:4]
+                context += "\nKPDES (Kentucky Pollutant Discharge Elimination System) regulations: "
+                context += "\n".join([dataset["description"] for dataset in datasets])
+            else:
+                response = requests.get(f"{VDB_URL}?search_terms={user_input}")
+                datasets = json.loads(response.text)
+                datasets = datasets[0:5]
+                context = "\n".join([dataset["description"] for dataset in datasets])
             try:
                 result = rag_chain.invoke({"question": user_input, "context": context})
             except Exception as e:
