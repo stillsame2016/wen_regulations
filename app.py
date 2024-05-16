@@ -30,7 +30,7 @@ st.write("")
 
 user_input = PromptTemplate(
     template="""<|begin_of_text|><|start_header_id|>system<|end_header_id|> You are the expert of National Pollution 
-        Discharge Elimination System (NPDES). 
+        Discharge Elimination System (NPDES) and Kentucky Pollutant Discharge Elimination System. 
 
         The National Pollutant Discharge Elimination System (NPDES) is a regulatory program implemented by the United 
         States Environmental Protection Agency (EPA) to control water pollution. It was established under the Clean 
