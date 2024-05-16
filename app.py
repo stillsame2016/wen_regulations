@@ -20,7 +20,7 @@ if "chat" not in st.session_state:
     st.session_state.chat = []
 
 # Display Form Title
-st.markdown("### Chat with NPDES ")
+st.markdown("### Chat with NPDES and KPDES")
 
 # Display chat messages from history above current input box
 for message in st.session_state.chat:
